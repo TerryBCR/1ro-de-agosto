@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Sharise</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #faf3f0;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(200, 160, 160, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        h1 {
+            color: #d48c8f;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        p {
+            color: #6d5b5b;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 35px;
+        }
+
+        .spotify-player {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Diseño de pétalos de flor con CSS (sin emojis) */
+        .petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #f4c4c4;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(45deg);
+            opacity: 0.7;
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Para Sharise</h1>
+        <p>
+            te amo mucho<br>
+            eres lo mas importante en mi vida<br>
+            quiero que siempre sepas que te amo
+        </p>
+        
+        <div class="spotify-player">
+            <iframe style="border-radius:12px" 
+                    src="https://open.spotify.com/embed/track/1licjid99qj1BFIYGb3wZC?utm_source=generator&theme=0" 
+                    width="100%" 
+                    height="152" 
+                    frameBorder="0" 
+                    allowfullscreen="" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+            </iframe>
+        </div>
+    </div>
+
+    <script>
+        // Script para generar los pétalos cayendo
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            
+            // Posición inicial aleatoria
+            petal.style.left = Math.random() * 100 + 'vw';
+            
+            // Duración de la caída aleatoria
+            const animationDuration = Math.random() * 5 + 4; // Entre 4 y 9 segundos
+            petal.style.animationDuration = animationDuration + 's';
+            
+            // Ligera variación en el color de los pétalos
+            const colors = ['#f4c4c4', '#f8d9d9', '#eeb5b5'];
+            petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Tamaño aleatorio
+            const size = Math.random() * 10 + 10; // Entre 10px y 20px
+            petal.style.width = size + 'px';
+            petal.style.height = size + 'px';
+
+            document.body.appendChild(petal);
+
+            // Eliminar el pétalo una vez que termina su animación
+            setTimeout(() => {
+                petal.remove();
+            }, animationDuration * 1000);
+        }
+
+        // Crear un pétalo nuevo cada 400 milisegundos
+        setInterval(createPetal, 400);
+    </script>
+</body>
+</html>
