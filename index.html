@@ -157,22 +157,34 @@
             margin-top: 0;
         }
 
-        /* Estilo mejorado para imagen cuadrada */
+        /* Imagen en forma de disco giratorio */
         .foto-pareja {
             width: 100%;
-            max-width: 250px; 
+            max-width: 220px; 
             aspect-ratio: 1 / 1; 
             object-fit: cover; 
-            border-radius: 20px;
+            border-radius: 50%; /* Esto la hace un círculo perfecto */
             margin-bottom: 20px;
             opacity: 0;
             transition: opacity 2s ease;
-            box-shadow: 0 8px 20px rgba(200, 160, 160, 0.25);
+            box-shadow: 0 10px 25px rgba(200, 160, 160, 0.4);
+            border: 5px solid #fff; /* Borde estilo marco de disco */
             display: block;
         }
 
         .foto-pareja.visible {
             opacity: 1;
+            animation: spin 12s linear infinite;
+            animation-play-state: paused; /* Empieza pausado hasta darle play al audio */
+        }
+
+        .foto-pareja.playing {
+            animation-play-state: running; /* Gira cuando la música suena */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .typing-message {
@@ -184,7 +196,6 @@
             width: 100%;
         }
 
-        /* Reproductor de audio personalizado */
         .custom-audio-player {
             display: flex;
             align-items: center;
@@ -272,18 +283,15 @@
             <div class="card">
                 <h1>Para Sharise</h1>
                 
-                <!-- Imagen adaptada -->
-                <img src="foto.jpg" alt="Sharise" class="foto-pareja" id="main-photo">
+                <img src="foto.jpg" alt="Sharise y yo" class="foto-pareja" id="main-photo">
                 
                 <div id="typing-text" class="typing-message"></div>
                 
-                <!-- Reproductor de audio nuevo -->
                 <div class="custom-audio-player">
                     <button id="play-btn" class="play-btn">▶</button>
                     <div class="progress-container" id="progress-container">
                         <div class="progress-bar" id="progress-bar"></div>
                     </div>
-                    <!-- Audio oculto -->
                     <audio id="my-audio" loop>
                         <source src="cancion.mp3" type="audio/mpeg">
                     </audio>
@@ -349,7 +357,6 @@
             }
         }
 
-        // Lógica del reproductor de audio personalizado
         const audio = document.getElementById('my-audio');
         const playBtn = document.getElementById('play-btn');
         const progressContainer = document.getElementById('progress-container');
@@ -360,9 +367,11 @@
             if (isPlaying) {
                 audio.pause();
                 playBtn.innerHTML = '▶';
+                mainPhoto.classList.remove('playing'); // Pausa la animación del disco
             } else {
                 audio.play();
                 playBtn.innerHTML = '⏸';
+                mainPhoto.classList.add('playing'); // Inicia la animación del disco
             }
             isPlaying = !isPlaying;
         });
