@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Para Sharise</title>
     <style>
-        /* Estilos Base */
         body {
             margin: 0;
             padding: 0;
@@ -18,7 +17,6 @@
             min-height: 100vh;
         }
 
-        /* --- Contenedor Principal --- */
         .main-container {
             position: relative;
             width: 100%;
@@ -28,7 +26,6 @@
             align-items: center;
         }
 
-        /* --- Estilos del Regalo CSS --- */
         #gift-screen {
             position: absolute;
             z-index: 50;
@@ -72,7 +69,6 @@
             z-index: 2;
         }
 
-        /* Cintas del regalo */
         .ribbon-v {
             position: absolute;
             width: 24px;
@@ -111,7 +107,6 @@
             100% { opacity: 0.6; }
         }
 
-        /* Animación al abrir el regalo */
         .gift-wrapper.open .gift-lid {
             transform: translateY(-60px) rotate(15deg);
             opacity: 0;
@@ -121,7 +116,6 @@
             opacity: 0;
         }
 
-        /* --- Estilos de la Carta Oculta --- */
         #card-screen {
             opacity: 0;
             visibility: hidden;
@@ -140,44 +134,68 @@
 
         .card {
             background: rgba(255, 255, 255, 0.85);
-            padding: 50px 40px;
+            padding: 40px 30px;
             border-radius: 25px;
             box-shadow: 0 15px 35px rgba(200, 160, 160, 0.15);
             text-align: center;
-            max-width: 550px;
+            max-width: 500px;
             width: 90%;
             z-index: 10;
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         h1 {
             color: #d48c8f;
             font-size: 2.2rem;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-weight: normal;
             letter-spacing: 2px;
+            margin-top: 0;
+        }
+
+        .foto-pareja {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 2s ease;
+            box-shadow: 0 5px 15px rgba(200, 160, 160, 0.2);
+        }
+
+        .foto-pareja.visible {
+            opacity: 1;
         }
 
         .typing-message {
             color: #7a6565;
-            font-size: 1.3rem;
-            line-height: 1.8;
-            margin-bottom: 35px;
-            min-height: 120px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            min-height: 100px;
+            width: 100%;
         }
 
-        .spotify-player {
+        .audio-player {
             width: 100%;
-            margin-top: 20px;
+            margin-top: 10px;
             border-radius: 12px;
-            overflow: hidden;
             background: #fff;
-            padding: 8px;
+            padding: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
+        
+        audio {
+            width: 100%;
+            height: 40px;
+            outline: none;
+        }
 
-        /* --- Pétalos Cayendo --- */
         .petal {
             position: absolute;
             border-radius: 50% 50% 0 50%;
@@ -198,7 +216,6 @@
 
     <div class="main-container">
         
-        <!-- Pantalla del Regalo -->
         <div id="gift-screen">
             <div class="gift-wrapper" id="the-gift">
                 <div class="gift-lid">
@@ -212,23 +229,19 @@
             <div class="click-text">toca el regalo</div>
         </div>
 
-        <!-- Pantalla de la Carta -->
         <div id="card-screen">
             <div class="card">
                 <h1>Para Sharise</h1>
                 
+                <img src="foto.jpg" alt="Sharise y yo" class="foto-pareja" id="main-photo">
+                
                 <div id="typing-text" class="typing-message"></div>
                 
-                <div class="spotify-player">
-                    <iframe style="border-radius:12px" 
-                        src="https://open.spotify.com/embed/track/1licjid99qj1BFIYGb3wZC?utm_source=generator&theme=0" 
-                        width="100%" 
-                        height="152" 
-                        frameBorder="0" 
-                        allowfullscreen="" 
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                        loading="lazy">
-                    </iframe>
+                <div class="audio-player">
+                    <audio controls loop>
+                        <source src="cancion.mp3" type="audio/mpeg">
+                        tu navegador no soporta el audio
+                    </audio>
                 </div>
             </div>
         </div>
@@ -236,31 +249,31 @@
     </div>
 
     <script>
-        // Lógica para abrir el regalo
         const giftWrapper = document.getElementById('the-gift');
         const giftScreen = document.getElementById('gift-screen');
         const cardScreen = document.getElementById('card-screen');
+        const mainPhoto = document.getElementById('main-photo');
         let giftOpened = false;
 
         giftWrapper.addEventListener('click', () => {
             if (giftOpened) return;
             giftOpened = true;
 
-            // Animar el regalo
             giftWrapper.classList.add('open');
 
-            // Ocultar la pantalla del regalo y mostrar la carta después de un breve retraso
             setTimeout(() => {
                 giftScreen.style.opacity = '0';
                 giftScreen.style.visibility = 'hidden';
                 cardScreen.classList.add('visible');
                 
-                // Iniciar el efecto de texto una vez que la carta aparece
-                setTimeout(typeMessage, 800);
+                setTimeout(() => {
+                    mainPhoto.classList.add('visible');
+                    setTimeout(typeMessage, 1000);
+                }, 600);
+                
             }, 800);
         });
 
-        // Efecto de texto dinámico y casual
         const messageArray = [
             "mi niña hermosa",
             "cada dia me enamoro mas de ti y de lo increible que eres",
@@ -291,7 +304,6 @@
             }
         }
 
-        // Lógica de los pétalos de fondo
         function createPetal() {
             const petal = document.createElement('div');
             petal.classList.add('petal');
