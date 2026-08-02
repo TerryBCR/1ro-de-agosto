@@ -3,145 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Sharise - Un Momento Especial</title>
+    <title>Para Sharise</title>
     <style>
-        /* Estilos Base y Diseño */
+        /* Estilos Base */
         body {
             margin: 0;
             padding: 0;
-            background-color: #faf3f0; /* Color de fondo muy suave */
+            background-color: #faf3f0; 
             font-family: 'Georgia', serif;
-            overflow-wrap: break-word;
-            opacity: 0; /* Para la transición de carga */
-            transition: opacity 1s ease-in-out;
-        }
-
-        body.loaded {
-            opacity: 1;
-        }
-
-        .container {
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            perspective: 1000px; /* Para efecto 3D sutil */
+        }
+
+        /* --- Contenedor Principal --- */
+        .main-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Estilos del Regalo CSS --- */
+        #gift-screen {
+            position: absolute;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .gift-wrapper {
+            cursor: pointer;
+            position: relative;
+            margin-top: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .gift-box {
+            width: 140px;
+            height: 120px;
+            background: #d48c8f;
+            position: relative;
+            border-radius: 4px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: opacity 0.5s ease 0.4s;
+        }
+
+        .gift-lid {
+            width: 154px;
+            height: 40px;
+            background: #eab2b5;
+            position: absolute;
+            top: -40px;
+            left: -7px;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            z-index: 2;
+        }
+
+        /* Cintas del regalo */
+        .ribbon-v {
+            position: absolute;
+            width: 24px;
+            height: 100%;
+            background: #fff;
+            left: 58px;
+        }
+
+        .ribbon-h {
+            position: absolute;
+            height: 24px;
+            width: 100%;
+            background: #fff;
+            top: 48px;
+        }
+
+        .ribbon-lid-v {
+            position: absolute;
+            width: 24px;
+            height: 100%;
+            background: #fff;
+            left: 65px;
+        }
+
+        .click-text {
+            margin-top: 30px;
+            color: #d48c8f;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Animación al abrir el regalo */
+        .gift-wrapper.open .gift-lid {
+            transform: translateY(-60px) rotate(15deg);
+            opacity: 0;
+        }
+
+        .gift-wrapper.open .gift-box {
+            opacity: 0;
+        }
+
+        /* --- Estilos de la Carta Oculta --- */
+        #card-screen {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #card-screen.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.85); /* Fondo de tarjeta sutil */
-            padding: 50px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(200, 160, 160, 0.15); /* Sombra suave */
+            background: rgba(255, 255, 255, 0.85);
+            padding: 50px 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(200, 160, 160, 0.15);
             text-align: center;
-            max-width: 600px;
+            max-width: 550px;
             width: 90%;
             z-index: 10;
-            backdrop-filter: blur(8px); /* Efecto de desenfoque de fondo */
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            transition: transform 0.3s ease; /* Para microinteracción */
-        }
-
-        .card:hover {
-            transform: translateY(-5px); /* Pequeña elevación al pasar el cursor */
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         h1 {
-            color: #d48c8f; /* Color floral suave */
-            font-size: 2.5rem;
+            color: #d48c8f;
+            font-size: 2.2rem;
             margin-bottom: 25px;
             font-weight: normal;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
         }
 
         .typing-message {
-            color: #6d5b5b; /* Color de texto suave */
-            font-size: 1.4rem;
+            color: #7a6565;
+            font-size: 1.3rem;
             line-height: 1.8;
-            margin-bottom: 40px;
-            min-height: 80px; /* Evita que el card salte */
+            margin-bottom: 35px;
+            min-height: 120px;
         }
 
         .spotify-player {
             width: 100%;
-            margin-top: 30px;
+            margin-top: 20px;
             border-radius: 12px;
             overflow: hidden;
-            background: #fff; /* Fondo blanco para el reproductor */
-            padding: 10px;
+            background: #fff;
+            padding: 8px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
-        /* Pétalos Cayendo CSS y Dinámicos */
+        /* --- Pétalos Cayendo --- */
         .petal {
             position: absolute;
-            background: #f4c4c4; /* Color de pétalo predeterminado */
             border-radius: 50% 50% 0 50%;
             transform: rotate(45deg);
             pointer-events: none;
             z-index: 1;
-            transition: transform 0.1s linear, left 0.1s linear; /* Para la interacción del cursor */
         }
 
-        /* Partículas del Cursor (Opcional, sutil) */
-        .trail {
-            position: absolute;
-            height: 6px; width: 6px;
-            border-radius: 3px;
-            background: #d48c8f;
-            opacity: 0.7;
-            pointer-events: none;
-            z-index: 100;
-        }
-
-        /* Animación de Pétalos */
         @keyframes fall {
-            0% {
-                transform: translateY(-10vh) rotate(0deg) scale(0.8);
-                opacity: 0;
-            }
-            10% { opacity: 0.7; }
-            90% { opacity: 0.7; }
-            100% {
-                transform: translateY(110vh) rotate(360deg) scale(1.2);
-                opacity: 0;
-            }
+            0% { transform: translateY(-10vh) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(110vh) rotate(360deg) scale(1.2); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="card">
-            <h1>Para Sharise</h1>
-            
-            <div id="typing-text" class="typing-message"></div>
-            
-            <div class="spotify-player">
-                <iframe style="border-radius:12px" 
-                    src="https://open.spotify.com/embed/track/1licjid99qj1BFIYGb3wZC?utm_source=generator&theme=0" 
-                    width="100%" 
-                    height="152" 
-                    frameBorder="0" 
-                    allowfullscreen="" 
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                    loading="lazy">
-                </iframe>
+    <div class="main-container">
+        
+        <!-- Pantalla del Regalo -->
+        <div id="gift-screen">
+            <div class="gift-wrapper" id="the-gift">
+                <div class="gift-lid">
+                    <div class="ribbon-lid-v"></div>
+                </div>
+                <div class="gift-box">
+                    <div class="ribbon-v"></div>
+                    <div class="ribbon-h"></div>
+                </div>
+            </div>
+            <div class="click-text">toca el regalo</div>
+        </div>
+
+        <!-- Pantalla de la Carta -->
+        <div id="card-screen">
+            <div class="card">
+                <h1>Para Sharise</h1>
+                
+                <div id="typing-text" class="typing-message"></div>
+                
+                <div class="spotify-player">
+                    <iframe style="border-radius:12px" 
+                        src="https://open.spotify.com/embed/track/1licjid99qj1BFIYGb3wZC?utm_source=generator&theme=0" 
+                        width="100%" 
+                        height="152" 
+                        frameBorder="0" 
+                        allowfullscreen="" 
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                        loading="lazy">
+                    </iframe>
+                </div>
             </div>
         </div>
+
     </div>
 
     <script>
-        // --- 1. Transición de Carga ---
-        window.addEventListener('load', () => {
-            document.body.classList.add('loaded');
+        // Lógica para abrir el regalo
+        const giftWrapper = document.getElementById('the-gift');
+        const giftScreen = document.getElementById('gift-screen');
+        const cardScreen = document.getElementById('card-screen');
+        let giftOpened = false;
+
+        giftWrapper.addEventListener('click', () => {
+            if (giftOpened) return;
+            giftOpened = true;
+
+            // Animar el regalo
+            giftWrapper.classList.add('open');
+
+            // Ocultar la pantalla del regalo y mostrar la carta después de un breve retraso
+            setTimeout(() => {
+                giftScreen.style.opacity = '0';
+                giftScreen.style.visibility = 'hidden';
+                cardScreen.classList.add('visible');
+                
+                // Iniciar el efecto de texto una vez que la carta aparece
+                setTimeout(typeMessage, 800);
+            }, 800);
         });
 
-        // --- 2. Efecto de Escritura Dinámica ---
+        // Efecto de texto dinámico y casual
         const messageArray = [
-            "te amo mucho...",
-            "eres lo mas importante en mi vida",
-            "quiero que siempre sepas que te amo"
+            "mi niña hermosa",
+            "cada dia me enamoro mas de ti y de lo increible que eres",
+            "eres el regalo mas bonito que me ha dado la vida",
+            "quiero cuidarte y amarte por siempre"
         ];
         
         let messageIndex = 0;
@@ -155,142 +279,42 @@
                 if (charIndex < currentMessage.length) {
                     typingElement.innerHTML += currentMessage.charAt(charIndex);
                     charIndex++;
-                    setTimeout(typeMessage, 70); // Velocidad de escritura
+                    setTimeout(typeMessage, 60); 
                 } else {
-                    // Esperar antes de empezar el siguiente mensaje
                     setTimeout(() => {
-                        typingElement.innerHTML += '<br>'; // Nueva línea
+                        typingElement.innerHTML += '<br>';
                         messageIndex++;
                         charIndex = 0;
                         typeMessage();
-                    }, 1000); 
+                    }, 800); 
                 }
             }
         }
 
-        // Iniciar el efecto de escritura
-        setTimeout(typeMessage, 500);
-
-        // --- 3. Pétalos Interactivos y Dinámicos ---
-        const petals = [];
-        const numPetals = 40;
-        const mouse = { x: 0, y: 0 };
-
-        // Crear la estructura de los pétalos
-        for (let i = 0; i < numPetals; i++) {
+        // Lógica de los pétalos de fondo
+        function createPetal() {
             const petal = document.createElement('div');
             petal.classList.add('petal');
             
-            // Variaciones sutiles de color
             const colors = ['#f4c4c4', '#f8d9d9', '#eeb5b5'];
             petal.style.background = colors[Math.floor(Math.random() * colors.length)];
             
-            // Variaciones de tamaño y posición inicial
-            const size = Math.random() * 15 + 10; // Entre 10px y 25px
+            const size = Math.random() * 12 + 8;
             petal.style.width = `${size}px`;
             petal.style.height = `${size}px`;
             petal.style.left = `${Math.random() * 100}vw`;
             
-            // Configurar la animación CSS para que caigan
-            const animationDuration = Math.random() * 5 + 5; // Entre 5 y 10 segundos
-            petal.style.animation = `fall ${animationDuration}s linear infinite`;
+            const duration = Math.random() * 6 + 6;
+            petal.style.animation = `fall ${duration}s linear infinite`;
             
             document.body.appendChild(petal);
-            petals.push({
-                element: petal,
-                originalX: parseFloat(petal.style.left),
-                x: parseFloat(petal.style.left),
-                y: -10, // Posición vertical inicial
-                speedY: animationDuration / 10,
-                drift: Math.random() * 2 - 1 // Deriva horizontal sutil
-            });
+
+            setTimeout(() => {
+                petal.remove();
+            }, duration * 1000);
         }
 
-        // Actualizar la posición de los pétalos con interacción del cursor
-        function updatePetals() {
-            petals.forEach(petalData => {
-                // Interacción del cursor
-                const dx = petalData.x - mouse.x / window.innerWidth * 100;
-                const dist = Math.sqrt(dx * dx);
-                
-                if (dist < 15) { // Si el cursor está cerca, desviar el pétalo
-                    const pushFactor = (15 - dist) / 50;
-                    petalData.x += dx * pushFactor;
-                } else {
-                    // Volver lentamente a la posición original o deriva
-                    petalData.x += (petalData.originalX - petalData.x) * 0.01;
-                }
-                
-                // Actualizar la posición CSS
-                petalData.element.style.left = `${petalData.x}vw`;
-            });
-            requestAnimationFrame(updatePetals);
-        }
-
-        // Capturar movimiento del cursor
-        window.addEventListener('mousemove', e => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        // Iniciar la actualización de pétalos interactivos
-        updatePetals();
-
-        // --- 4. Rastro de Partículas del Cursor (Sutil) ---
-        var dots = [],
-            mousePosition = {
-              x: 0,
-              y: 0
-            };
-
-        var Dot = function() {
-          this.x = 0;
-          this.y = 0;
-          this.node = (function(){
-            var n = document.createElement("div");
-            n.className = "trail";
-            document.body.appendChild(n);
-            return n;
-          }());
-        };
-
-        Dot.prototype.draw = function() {
-          this.node.style.left = this.x - 3 + "px";
-          this.node.style.top = this.y - 3 + "px";
-        };
-
-        for (var i = 0; i < 15; i++) { // Número de partículas en el rastro
-          var d = new Dot();
-          dots.push(d);
-        }
-
-        function drawTrail() {
-          var x = mousePosition.x,
-              y = mousePosition.y;
-          
-          dots.forEach(function(dot, index, dots) {
-            var nextDot = dots[index + 1] || dots[0];
-            
-            dot.x = x;
-            dot.y = y;
-            dot.draw();
-            
-            x += (nextDot.x - dot.x) * .6;
-            y += (nextDot.y - dot.y) * .6;
-          });
-        }
-
-        addEventListener("mousemove", function(event){
-          mousePosition.x = event.clientX;
-          mousePosition.y = event.clientY;
-        });
-
-        function animateTrail() {
-          drawTrail();
-          requestAnimationFrame(animateTrail);
-        }
-
-        animateTrail();
+        setInterval(createPetal, 500);
 
     </script>
 </body>
