@@ -157,15 +157,18 @@
             margin-top: 0;
         }
 
+        /* Estilo mejorado para imagen cuadrada */
         .foto-pareja {
             width: 100%;
-            max-height: 220px;
-            object-fit: cover;
-            border-radius: 15px;
+            max-width: 250px; 
+            aspect-ratio: 1 / 1; 
+            object-fit: cover; 
+            border-radius: 20px;
             margin-bottom: 20px;
             opacity: 0;
             transition: opacity 2s ease;
-            box-shadow: 0 5px 15px rgba(200, 160, 160, 0.2);
+            box-shadow: 0 8px 20px rgba(200, 160, 160, 0.25);
+            display: block;
         }
 
         .foto-pareja.visible {
@@ -181,19 +184,55 @@
             width: 100%;
         }
 
-        .audio-player {
-            width: 100%;
-            margin-top: 10px;
-            border-radius: 12px;
+        /* Reproductor de audio personalizado */
+        .custom-audio-player {
+            display: flex;
+            align-items: center;
             background: #fff;
-            padding: 10px;
+            padding: 12px 20px;
+            border-radius: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        audio {
             width: 100%;
-            height: 40px;
-            outline: none;
+            box-sizing: border-box;
+        }
+
+        .play-btn {
+            background: #d48c8f;
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            margin-right: 15px;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            background: #c67b7e;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            height: 8px;
+            background: #f0e4e4;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #d48c8f;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.1s linear;
         }
 
         .petal {
@@ -233,14 +272,20 @@
             <div class="card">
                 <h1>Para Sharise</h1>
                 
-                <img src="foto.jpg" alt="Sharise y yo" class="foto-pareja" id="main-photo">
+                <!-- Imagen adaptada -->
+                <img src="foto.jpg" alt="Sharise" class="foto-pareja" id="main-photo">
                 
                 <div id="typing-text" class="typing-message"></div>
                 
-                <div class="audio-player">
-                    <audio controls loop>
+                <!-- Reproductor de audio nuevo -->
+                <div class="custom-audio-player">
+                    <button id="play-btn" class="play-btn">▶</button>
+                    <div class="progress-container" id="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <!-- Audio oculto -->
+                    <audio id="my-audio" loop>
                         <source src="cancion.mp3" type="audio/mpeg">
-                        tu navegador no soporta el audio
                     </audio>
                 </div>
             </div>
@@ -303,6 +348,40 @@
                 }
             }
         }
+
+        // Lógica del reproductor de audio personalizado
+        const audio = document.getElementById('my-audio');
+        const playBtn = document.getElementById('play-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        let isPlaying = false;
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.innerHTML = '▶';
+            } else {
+                audio.play();
+                playBtn.innerHTML = '⏸';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+            }
+        });
+
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            if (duration) {
+                audio.currentTime = (clickX / width) * duration;
+            }
+        });
 
         function createPetal() {
             const petal = document.createElement('div');
