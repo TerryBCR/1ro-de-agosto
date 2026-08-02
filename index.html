@@ -3,83 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Sharise</title>
+    <title>Para Sharise - Un Momento Especial</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
+        /* Estilos Base y Diseño */
         body {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+            background-color: #faf3f0; /* Color de fondo muy suave */
+            font-family: 'Georgia', serif;
+            overflow-wrap: break-word;
+            opacity: 0; /* Para la transición de carga */
+            transition: opacity 1s ease-in-out;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+
+        .container {
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #faf3f0;
-            font-family: 'Georgia', serif;
-            overflow: hidden;
-            position: relative;
+            min-height: 100vh;
+            perspective: 1000px; /* Para efecto 3D sutil */
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(200, 160, 160, 0.2);
+            background: rgba(255, 255, 255, 0.85); /* Fondo de tarjeta sutil */
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(200, 160, 160, 0.15); /* Sombra suave */
             text-align: center;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             z-index: 10;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px); /* Efecto de desenfoque de fondo */
             border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.3s ease; /* Para microinteracción */
+        }
+
+        .card:hover {
+            transform: translateY(-5px); /* Pequeña elevación al pasar el cursor */
         }
 
         h1 {
-            color: #d48c8f;
-            font-size: 2.2rem;
-            margin-bottom: 20px;
+            color: #d48c8f; /* Color floral suave */
+            font-size: 2.5rem;
+            margin-bottom: 25px;
             font-weight: normal;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
 
-        p {
-            color: #6d5b5b;
-            font-size: 1.2rem;
+        .typing-message {
+            color: #6d5b5b; /* Color de texto suave */
+            font-size: 1.4rem;
             line-height: 1.8;
-            margin-bottom: 35px;
+            margin-bottom: 40px;
+            min-height: 80px; /* Evita que el card salte */
         }
 
         .spotify-player {
             width: 100%;
-            margin-top: 20px;
+            margin-top: 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff; /* Fondo blanco para el reproductor */
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
-        /* Diseño de pétalos de flor con CSS (sin emojis) */
+        /* Pétalos Cayendo CSS y Dinámicos */
         .petal {
             position: absolute;
-            width: 15px;
-            height: 15px;
-            background: #f4c4c4;
+            background: #f4c4c4; /* Color de pétalo predeterminado */
             border-radius: 50% 50% 0 50%;
             transform: rotate(45deg);
-            opacity: 0.7;
-            animation: fall linear infinite;
             pointer-events: none;
             z-index: 1;
+            transition: transform 0.1s linear, left 0.1s linear; /* Para la interacción del cursor */
         }
 
+        /* Partículas del Cursor (Opcional, sutil) */
+        .trail {
+            position: absolute;
+            height: 6px; width: 6px;
+            border-radius: 3px;
+            background: #d48c8f;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Animación de Pétalos */
         @keyframes fall {
             0% {
                 transform: translateY(-10vh) rotate(0deg) scale(0.8);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.7;
-            }
-            90% {
-                opacity: 0.7;
-            }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
             100% {
                 transform: translateY(110vh) rotate(360deg) scale(1.2);
                 opacity: 0;
@@ -89,16 +111,14 @@
 </head>
 <body>
 
-    <div class="card">
-        <h1>Para Sharise</h1>
-        <p>
-            te amo mucho<br>
-            eres lo mas importante en mi vida<br>
-            quiero que siempre sepas que te amo
-        </p>
-        
-        <div class="spotify-player">
-            <iframe style="border-radius:12px" 
+    <div class="container">
+        <div class="card">
+            <h1>Para Sharise</h1>
+            
+            <div id="typing-text" class="typing-message"></div>
+            
+            <div class="spotify-player">
+                <iframe style="border-radius:12px" 
                     src="https://open.spotify.com/embed/track/1licjid99qj1BFIYGb3wZC?utm_source=generator&theme=0" 
                     width="100%" 
                     height="152" 
@@ -106,42 +126,172 @@
                     allowfullscreen="" 
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                     loading="lazy">
-            </iframe>
+                </iframe>
+            </div>
         </div>
     </div>
 
     <script>
-        // Script para generar los pétalos cayendo
-        function createPetal() {
+        // --- 1. Transición de Carga ---
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        // --- 2. Efecto de Escritura Dinámica ---
+        const messageArray = [
+            "te amo mucho...",
+            "eres lo mas importante en mi vida",
+            "quiero que siempre sepas que te amo"
+        ];
+        
+        let messageIndex = 0;
+        let charIndex = 0;
+        const typingElement = document.getElementById("typing-text");
+
+        function typeMessage() {
+            if (messageIndex < messageArray.length) {
+                let currentMessage = messageArray[messageIndex];
+                
+                if (charIndex < currentMessage.length) {
+                    typingElement.innerHTML += currentMessage.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeMessage, 70); // Velocidad de escritura
+                } else {
+                    // Esperar antes de empezar el siguiente mensaje
+                    setTimeout(() => {
+                        typingElement.innerHTML += '<br>'; // Nueva línea
+                        messageIndex++;
+                        charIndex = 0;
+                        typeMessage();
+                    }, 1000); 
+                }
+            }
+        }
+
+        // Iniciar el efecto de escritura
+        setTimeout(typeMessage, 500);
+
+        // --- 3. Pétalos Interactivos y Dinámicos ---
+        const petals = [];
+        const numPetals = 40;
+        const mouse = { x: 0, y: 0 };
+
+        // Crear la estructura de los pétalos
+        for (let i = 0; i < numPetals; i++) {
             const petal = document.createElement('div');
             petal.classList.add('petal');
             
-            // Posición inicial aleatoria
-            petal.style.left = Math.random() * 100 + 'vw';
-            
-            // Duración de la caída aleatoria
-            const animationDuration = Math.random() * 5 + 4; // Entre 4 y 9 segundos
-            petal.style.animationDuration = animationDuration + 's';
-            
-            // Ligera variación en el color de los pétalos
+            // Variaciones sutiles de color
             const colors = ['#f4c4c4', '#f8d9d9', '#eeb5b5'];
             petal.style.background = colors[Math.floor(Math.random() * colors.length)];
             
-            // Tamaño aleatorio
-            const size = Math.random() * 10 + 10; // Entre 10px y 20px
-            petal.style.width = size + 'px';
-            petal.style.height = size + 'px';
-
+            // Variaciones de tamaño y posición inicial
+            const size = Math.random() * 15 + 10; // Entre 10px y 25px
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${Math.random() * 100}vw`;
+            
+            // Configurar la animación CSS para que caigan
+            const animationDuration = Math.random() * 5 + 5; // Entre 5 y 10 segundos
+            petal.style.animation = `fall ${animationDuration}s linear infinite`;
+            
             document.body.appendChild(petal);
-
-            // Eliminar el pétalo una vez que termina su animación
-            setTimeout(() => {
-                petal.remove();
-            }, animationDuration * 1000);
+            petals.push({
+                element: petal,
+                originalX: parseFloat(petal.style.left),
+                x: parseFloat(petal.style.left),
+                y: -10, // Posición vertical inicial
+                speedY: animationDuration / 10,
+                drift: Math.random() * 2 - 1 // Deriva horizontal sutil
+            });
         }
 
-        // Crear un pétalo nuevo cada 400 milisegundos
-        setInterval(createPetal, 400);
+        // Actualizar la posición de los pétalos con interacción del cursor
+        function updatePetals() {
+            petals.forEach(petalData => {
+                // Interacción del cursor
+                const dx = petalData.x - mouse.x / window.innerWidth * 100;
+                const dist = Math.sqrt(dx * dx);
+                
+                if (dist < 15) { // Si el cursor está cerca, desviar el pétalo
+                    const pushFactor = (15 - dist) / 50;
+                    petalData.x += dx * pushFactor;
+                } else {
+                    // Volver lentamente a la posición original o deriva
+                    petalData.x += (petalData.originalX - petalData.x) * 0.01;
+                }
+                
+                // Actualizar la posición CSS
+                petalData.element.style.left = `${petalData.x}vw`;
+            });
+            requestAnimationFrame(updatePetals);
+        }
+
+        // Capturar movimiento del cursor
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Iniciar la actualización de pétalos interactivos
+        updatePetals();
+
+        // --- 4. Rastro de Partículas del Cursor (Sutil) ---
+        var dots = [],
+            mousePosition = {
+              x: 0,
+              y: 0
+            };
+
+        var Dot = function() {
+          this.x = 0;
+          this.y = 0;
+          this.node = (function(){
+            var n = document.createElement("div");
+            n.className = "trail";
+            document.body.appendChild(n);
+            return n;
+          }());
+        };
+
+        Dot.prototype.draw = function() {
+          this.node.style.left = this.x - 3 + "px";
+          this.node.style.top = this.y - 3 + "px";
+        };
+
+        for (var i = 0; i < 15; i++) { // Número de partículas en el rastro
+          var d = new Dot();
+          dots.push(d);
+        }
+
+        function drawTrail() {
+          var x = mousePosition.x,
+              y = mousePosition.y;
+          
+          dots.forEach(function(dot, index, dots) {
+            var nextDot = dots[index + 1] || dots[0];
+            
+            dot.x = x;
+            dot.y = y;
+            dot.draw();
+            
+            x += (nextDot.x - dot.x) * .6;
+            y += (nextDot.y - dot.y) * .6;
+          });
+        }
+
+        addEventListener("mousemove", function(event){
+          mousePosition.x = event.clientX;
+          mousePosition.y = event.clientY;
+        });
+
+        function animateTrail() {
+          drawTrail();
+          requestAnimationFrame(animateTrail);
+        }
+
+        animateTrail();
+
     </script>
 </body>
 </html>
